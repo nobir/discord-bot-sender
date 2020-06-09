@@ -1,0 +1,14 @@
+{
+  "name": "nobir-test001",
+  "version": "1.0.0",
+  "description": "Test app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Nobir",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.2.0"
+  }
+}
