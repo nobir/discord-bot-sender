@@ -6,13 +6,16 @@ client.once('ready', () => {
 	console.log('Client Ready!')
 
 	client.on('message', msg => {
+		if(!msg.guild || !msg.content.startsWith('!DM')) return
+
 		if (msg.guild && msg.content.startsWith(prefix)) {
 			let text = msg.content.slice(prefix.length)
-			// console.log(msg.guild.channels.cache)
+
 			msg.guild.members.cache.forEach(member => {
-				if (member.user.discriminator == 5326) {
+				if (member.id != client.user.id && !member.user.bot) {
 					member.send(text)
 					msg.channel.send("DM " + member.user.username)
+					// console.log("done!")
 				}
 			})
 		}
