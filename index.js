@@ -6,7 +6,7 @@ client.once('ready', () => {
 	console.log('Client Ready!')
 
 	client.on('message', msg => {
-		if(!msg.guild || !msg.content.startsWith('!DM')) return
+		if (!msg.guild || !msg.content.startsWith('!DM')) return
 
 		if (msg.guild && msg.content.startsWith(prefix)) {
 			let text = msg.content.slice(prefix.length)
