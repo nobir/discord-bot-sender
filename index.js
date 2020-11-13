@@ -61,7 +61,7 @@ client.on('message', message => {
     // console.log(memberList.length)
 
     if (message.guild && message.content.startsWith(prefix) && Array.isArray(members) && members.length) {
-        let text = message.content.slice(prefix.length).trim().replace(/\s?<@[&|!]?[0-9>\s?]+/g, '')
+        let text = message.content.slice(prefix.length).trim().replace(/\s?<@&?[0-9>\s?]+/g, '')
 
         let isSentAllMembers = [...members.map(async member => {
             await member.send(text).then(async () => {
