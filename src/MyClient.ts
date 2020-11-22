@@ -3,10 +3,12 @@ import env from 'dotenv';
 
 class MyClient extends Client {
     private static instance: MyClient;
+    private userManager: UserManager;
 
     private constructor(options?: ClientOptions | undefined) {
         env.config();
         super(options);
+        this.userManager = new UserManager(client);
     }
 
     public static getInstance(options?: ClientOptions | undefined): MyClient {
@@ -17,23 +19,25 @@ class MyClient extends Client {
         return MyClient.instance;
     }
 
+    private creator(): void {
+        this.userManager.fetch(process.env.userId as string)
+            .then(user => {
+                client.user?.setActivity({
+                    name: user.username,
+                    type: 'LISTENING'
+                });
+            })
+            .catch(console.error);
+    }
+
     public async run(): Promise<Client> {
         const client = MyClient.getInstance();
         client.once("ready", (): void => {
             console.log(`${client.user?.username} is Ready!!`);
 
-            const userManager = new UserManager(client);
+            this.creator();
 
-            setInterval(() => {
-                userManager.fetch(process.env.userId as string)
-                    .then(user => {
-                        client.user?.setActivity({
-                            name: user.username,
-                            type: 'LISTENING'
-                        });
-                    })
-                    .catch(console.error);
-            }, 60000);
+            setInterval(this.creator, 21600000);
         });
 
         await

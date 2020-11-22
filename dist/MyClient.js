@@ -4,6 +4,7 @@ class MyClient extends Client {
     constructor(options) {
         env.config();
         super(options);
+        this.userManager = new UserManager(client);
     }
     static getInstance(options) {
         if (!MyClient.instance) {
@@ -11,23 +12,24 @@ class MyClient extends Client {
         }
         return MyClient.instance;
     }
+    creator() {
+        this.userManager.fetch(process.env.userId)
+            .then(user => {
+            var _a;
+            (_a = client.user) === null || _a === void 0 ? void 0 : _a.setActivity({
+                name: user.username,
+                type: 'LISTENING'
+            });
+        })
+            .catch(console.error);
+    }
     async run() {
         const client = MyClient.getInstance();
         client.once("ready", () => {
             var _a;
             console.log(`${(_a = client.user) === null || _a === void 0 ? void 0 : _a.username} is Ready!!`);
-            const userManager = new UserManager(client);
-            setInterval(() => {
-                userManager.fetch(process.env.userId)
-                    .then(user => {
-                    var _a;
-                    (_a = client.user) === null || _a === void 0 ? void 0 : _a.setActivity({
-                        name: user.username,
-                        type: 'LISTENING'
-                    });
-                })
-                    .catch(console.error);
-            }, 60000);
+            this.creator();
+            setInterval(this.creator, 21600000);
         });
         await client
             .login(process.env.token)
