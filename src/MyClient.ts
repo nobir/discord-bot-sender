@@ -8,7 +8,7 @@ class MyClient extends Client {
     private constructor(options?: ClientOptions | undefined) {
         env.config();
         super(options);
-        this.userManager = new UserManager(client);
+        this.userManager = new UserManager(this as Client);
     }
 
     public static getInstance(options?: ClientOptions | undefined): MyClient {

@@ -4,7 +4,7 @@ class MyClient extends Client {
     constructor(options) {
         env.config();
         super(options);
-        this.userManager = new UserManager(client);
+        this.userManager = new UserManager(this);
     }
     static getInstance(options) {
         if (!MyClient.instance) {
