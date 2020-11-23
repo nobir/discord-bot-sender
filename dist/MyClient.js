@@ -42,4 +42,3 @@ class MyClient extends Client {
     }
 }
 export const client = MyClient.getInstance();
-// export default client;

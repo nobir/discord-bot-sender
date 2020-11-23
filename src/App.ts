@@ -1,4 +1,5 @@
 import { Message, MessageEmbed, User } from 'discord.js';
+import { promises } from 'dns';
 import Base from './Base.js';
 import { client } from "./MyClient.js";
 
@@ -59,21 +60,22 @@ class App extends Base {
     }
 
     sendMessage(message: Message, members: User[]): void {
-        if (!members.length) return;
+        if (!members.length || !process.env.prefix) return;
 
-        let text = message.content
-            .slice(process.env.prefix?.length)
+        let text: string = message.content
+            .slice(process.env.prefix.length)
             .trim()
             .replace('@everyone', '')
             .trim()
             .replace(/\s?<@&?[0-9>\s?]+/g, '');
 
-        let embedMsg = new MessageEmbed();
+        let embedMsg: MessageEmbed = new MessageEmbed();
 
-        let isSendMessage = [...members.map(async (member: User): Promise<void> => {
-            await member.send(text).then(async () => {
+        let isSendMessage: Promise<void> | undefined = [...members.map(async (member: User) => {
+            return await member.send(text).then(async () => {
                 App.totalSend++;
-                await message.channel.send("`DM " + member.username + "`")
+                await message.channel.send("`DM " + member.username + "`");
+                return new Promise<void>(() => void 0);
             }).catch(err => {
                 App.totalNotSend++;
                 console.error(err);
@@ -90,9 +92,7 @@ class App extends Base {
                     .setDescription('');
                 await message.reply(embedMsg)
             })
-            .catch(async err => {
-                console.error(err)
-            })
+            .catch(console.error)
     }
 
     run(): void {

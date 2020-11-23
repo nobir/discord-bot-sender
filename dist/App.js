@@ -46,20 +46,20 @@ class App extends Base {
         }
     }
     sendMessage(message, members) {
-        var _a;
-        if (!members.length)
+        if (!members.length || !process.env.prefix)
             return;
         let text = message.content
-            .slice((_a = process.env.prefix) === null || _a === void 0 ? void 0 : _a.length)
+            .slice(process.env.prefix.length)
             .trim()
             .replace('@everyone', '')
             .trim()
             .replace(/\s?<@&?[0-9>\s?]+/g, '');
         let embedMsg = new MessageEmbed();
         let isSendMessage = [...members.map(async (member) => {
-                await member.send(text).then(async () => {
+                return await member.send(text).then(async () => {
                     App.totalSend++;
                     await message.channel.send("`DM " + member.username + "`");
+                    return new Promise(() => void 0);
                 }).catch(err => {
                     App.totalNotSend++;
                     console.error(err);
@@ -73,9 +73,7 @@ class App extends Base {
                 .addField(':frog:  Total Bot :frog:  ', App.bot, true)
                 .setDescription('');
             await message.reply(embedMsg);
-        }).catch(async (err) => {
-            console.error(err);
-        });
+        }).catch(console.error);
     }
     run() {
         client.run()
