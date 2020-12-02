@@ -1,5 +1,4 @@
 import { Message, MessageEmbed, User } from 'discord.js';
-import { promises } from 'dns';
 import Base from './Base.js';
 import { client } from "./MyClient.js";
 
