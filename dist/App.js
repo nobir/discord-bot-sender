@@ -54,18 +54,17 @@ class App extends Base {
             .replace('@everyone', '')
             .trim()
             .replace(/\s?<@&?[0-9>\s?]+/g, '');
-        let embedMsg = new MessageEmbed();
         let isSendMessage = [...members.map(async (member) => {
                 return await member.send(text).then(async () => {
                     App.totalSend++;
                     await message.channel.send("`DM " + member.username + "`");
-                    return new Promise(() => void 0);
                 }).catch(err => {
                     App.totalNotSend++;
                     console.error(err);
                 });
             })].pop();
         isSendMessage === null || isSendMessage === void 0 ? void 0 : isSendMessage.then(async () => {
+            let embedMsg = new MessageEmbed();
             embedMsg.setTitle('===== Summary =====')
                 .setColor(0xff0000)
                 .addField(':rocket:  Total Send  :rocket:  ', App.totalSend, true)
